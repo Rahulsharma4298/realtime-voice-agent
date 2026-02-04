@@ -1,0 +1,30 @@
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    network_mode: host
+    restart: unless-stopped
+
+  agent:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.agent
+    env_file:
+      - .env.production
+    depends_on:
+      - livekit
+    network_mode: host
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../deployment/Dockerfile.frontend
+    env_file:
+      - .env.production
+    depends_on:
+      - livekit
+    network_mode: host
+    restart: unless-stopped

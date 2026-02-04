@@ -1,0 +1,12 @@
+port: 7880
+rtc:
+  port_range_start: 50000
+  port_range_end: 60000
+  use_external_ip: true  # Critical for public cloud deployment
+  # tcp_fallback_port: 443 # Optional: Enable if you want TCP fallback
+
+keys:
+  devkey: secret  # Change this in production!
+
+logging:
+  level: info
