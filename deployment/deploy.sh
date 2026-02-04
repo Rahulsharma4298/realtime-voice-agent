@@ -26,10 +26,26 @@ fi
 # 2. Install Docker
 if ! command -v docker &> /dev/null; then
     echo -e "${YELLOW}Installing Docker...${NC}"
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
+    
+    # Add Docker's official GPG key
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    
+    # Add the repository to Apt sources
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    
+    sudo apt-get update
+    
+    # Install Docker packages (without docker-model-plugin which doesn't exist)
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
+    
     sudo usermod -aG docker $USER
     echo -e "${GREEN}Docker installed.${NC}"
+    echo -e "${YELLOW}Note: You may need to log out and back in for group changes to take effect.${NC}"
 else
     echo -e "${GREEN}Docker already installed.${NC}"
 fi
@@ -75,8 +91,18 @@ fi
 
 # 5. Start Services
 echo -e "${YELLOW}Starting services...${NC}"
-docker compose -f docker-compose.yml up -d --build
+
+# Use sudo if user doesn't have docker group active yet
+if groups | grep -q docker; then
+    docker compose -f docker-compose.yml up -d --build
+else
+    echo -e "${YELLOW}Using sudo for docker (group membership not active yet)${NC}"
+    sudo docker compose -f docker-compose.yml up -d --build
+fi
 
 echo -e "${GREEN}=== Deployment Complete! ===${NC}"
 echo -e "Frontend: http://$PUBLIC_IP:3000"
 echo -e "LiveKit:  http://$PUBLIC_IP:7880"
+echo -e ""
+echo -e "${YELLOW}Note: If you installed Docker for the first time, you may need to log out and back in.${NC}"
+echo -e "${YELLOW}To view logs: sudo docker compose logs -f${NC}"
