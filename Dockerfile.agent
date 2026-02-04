@@ -2,10 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including GLib libraries for LiveKit RTC
 RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
+    libglib2.0-0 \
+    libgobject-2.0-0 \
+    libgirepository-1.0-1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
