@@ -10,8 +10,7 @@ async function handleTokenRequest(req: NextRequest) {
 
     const apiKey = process.env.LIVEKIT_API_KEY;
     const apiSecret = process.env.LIVEKIT_API_SECRET;
-    // Use public URL if available (for client), otherwise fall back to internal URL
-    const wsUrl = process.env.LIVEKIT_PUBLIC_URL || process.env.LIVEKIT_URL;
+    const wsUrl = process.env.LIVEKIT_URL;
 
     if (!apiKey || !apiSecret || !wsUrl) {
         return NextResponse.json(

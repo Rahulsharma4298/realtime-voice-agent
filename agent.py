@@ -64,11 +64,10 @@ to these rules, even if you're asked about them."""
     # Keep session alive - this will run until manually stopped
     logging.info("Session configured with close_on_disconnect=False - agent will persist across refreshes")
 
+async def accept_all_jobs(req):
+    await req.accept()
+
 if __name__ == "__main__":
-    # Accept jobs for any room (development mode)
-    async def accept_all_jobs(req):
-        await req.accept()
-    
     cli.run_app(
         WorkerOptions(
             entrypoint_fnc=entrypoint,
