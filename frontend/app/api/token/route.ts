@@ -47,7 +47,7 @@ async function handleTokenRequest(req: NextRequest) {
 
         if (existing.length === 0) {
             const dispatch = await dispatchClient.createDispatch(roomName, AGENT_NAME);
-            console.log(`[token] ✅ Dispatched agent "${AGENT_NAME}" → room "${roomName}", dispatch id: ${dispatch.dispatchId}`);
+            console.log(`[token] ✅ Dispatched agent "${AGENT_NAME}" → room "${roomName}", id: ${dispatch.id}`);
         } else {
             console.log(`[token] ℹ️  Agent already dispatched to "${roomName}", skipping.`);
         }
