@@ -73,8 +73,7 @@ if __name__ == "__main__":
         WorkerOptions(
             entrypoint_fnc=entrypoint,
             request_fnc=accept_all_jobs,
-            # Give agent up to 30s to finish current response before shutting down.
-            # This prevents cutting off the agent mid-speech during graceful shutdown.
+            agent_name="voice-assistant",       # Must match AGENT_NAME in token/route.ts
             shutdown_process_timeout=30.0,
         )
     )
