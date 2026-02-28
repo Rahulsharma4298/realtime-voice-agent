@@ -57,11 +57,21 @@ to these rules, even if you're asked about them."""
         room_options=room_opts,
     )
 
+    @session.on("agent_state_changed")
+    def on_agent_state_changed(ev):
+        logging.info(f"Agent state: {ev.old_state} → {ev.new_state}")
+
+    @session.on("user_state_changed")
+    def on_user_state_changed(ev):
+        logging.info(f"User state: {ev.old_state} → {ev.new_state}")
+
     logging.info("Generating initial greeting...")
     await session.generate_reply(
         instructions="Greet the user and offer your assistance."
     )
     logging.info("Agent is active and waiting for input.")
+
+
 
 
 async def accept_all_jobs(req):
